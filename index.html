@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BINIO — Demo de Clearing</title>
+<style>
+  :root{
+    --bg:#070C18;
+    --bg-2:#0A1224;
+    --panel:#0E1730;
+    --panel-2:#111C38;
+    --stroke:rgba(255,255,255,0.08);
+    --stroke-strong:rgba(255,255,255,0.14);
+    --txt:#EAF1FF;
+    --txt-dim:#8FA3C4;
+    --txt-faint:#5C6E8E;
+    --blue:#2F80FF;
+    --blue-soft:#4A93FF;
+    --purple:#8B5CF6;
+    --teal:#12D9AE;
+    --green:#22C55E;
+    --red:#F87171;
+    --amber:#F5B841;
+    --radius:18px;
+    --shadow:0 20px 50px rgba(0,0,0,0.45);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,'Segoe UI',Inter,Arial,sans-serif;
+    color:var(--txt);
+    min-height:100vh;
+    padding-bottom:70px;
+    background:
+      radial-gradient(1200px 600px at 82% -8%, rgba(47,128,255,0.18), transparent 60%),
+      radial-gradient(1000px 560px at 12% 8%, rgba(139,92,246,0.14), transparent 60%),
+      radial-gradient(900px 700px at 60% 120%, rgba(18,217,174,0.10), transparent 55%),
+      var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 34px;
+    border-bottom:1px solid var(--stroke);
+    backdrop-filter:blur(8px);
+    position:sticky;top:0;z-index:20;
+    background:rgba(7,12,24,0.72);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-logo{
+    width:40px;height:40px;border-radius:12px;
+    background:linear-gradient(135deg,#2F80FF,#59A0FF);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 22px rgba(47,128,255,0.45);
+    position:relative;
+  }
+  .brand-logo svg{width:22px;height:22px;}
+  .brand-name{font-weight:800;font-size:23px;letter-spacing:-0.5px;}
+  .header-right{display:flex;align-items:center;gap:14px;}
+  .pill{
+    font-size:12px;color:var(--txt-dim);
+    background:rgba(255,255,255,0.05);
+    border:1px solid var(--stroke);
+    padding:7px 14px;border-radius:100px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal);}
+
+  /* ---------- Layout ---------- */
+  .container{max-width:1160px;margin:0 auto;padding:38px 26px;}
+
+  .intro{margin-bottom:30px;}
+  .intro .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--blue-soft);
+    background:rgba(47,128,255,0.10);
+    border:1px solid rgba(47,128,255,0.22);
+    padding:6px 14px;border-radius:100px;margin-bottom:16px;
+  }
+  .intro h1{font-size:30px;line-height:1.2;letter-spacing:-0.6px;margin-bottom:10px;}
+  .intro h1 b{background:linear-gradient(120deg,#4A93FF,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .intro p{color:var(--txt-dim);font-size:15px;max-width:640px;line-height:1.55;}
+
+  .section-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:16px;font-weight:700;margin:34px 0 16px;
+  }
+  .section-title .chip{
+    font-size:11px;font-weight:600;color:var(--txt-dim);
+    background:rgba(255,255,255,0.05);border:1px solid var(--stroke);
+    padding:3px 10px;border-radius:100px;
+  }
+  .section-title .spacer{flex:1;}
+
+  /* ---------- Company cards ---------- */
+  .companies{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .company-card{
+    position:relative;overflow:hidden;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--stroke);
+    border-radius:var(--radius);
+    padding:24px;
+    box-shadow:var(--shadow);
+  }
+  .company-card::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:3px;
+  }
+  .company-card.a::before{background:linear-gradient(90deg,#2F80FF,#59A0FF);}
+  .company-card.b::before{background:linear-gradient(90deg,#12D9AE,#22C55E);}
+  .company-card .glow{
+    position:absolute;width:220px;height:220px;border-radius:50%;
+    filter:blur(60px);opacity:0.28;top:-70px;right:-40px;pointer-events:none;
+  }
+  .company-card.a .glow{background:#2F80FF;}
+  .company-card.b .glow{background:#12D9AE;}
+
+  .company-head{display:flex;align-items:center;gap:13px;margin-bottom:20px;position:relative;}
+  .company-avatar{
+    width:46px;height:46px;border-radius:13px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:22px;
+    border:1px solid var(--stroke-strong);
+  }
+  .company-card.a .company-avatar{background:rgba(47,128,255,0.14);}
+  .company-card.b .company-avatar{background:rgba(18,217,174,0.14);}
+  .company-meta{flex:1;min-width:0;}
+  .company-name{
+    font-weight:700;font-size:17px;letter-spacing:-0.2px;
+    outline:none;border-radius:6px;padding:2px 4px;margin:-2px -4px;
+  }
+  .company-role{font-size:12px;color:var(--txt-faint);margin-top:3px;}
+
+  .balances{display:flex;gap:12px;}
+  .balance-box{
+    flex:1;background:rgba(255,255,255,0.03);
+    border:1px solid var(--stroke);border-radius:13px;padding:14px;
+  }
+  .balance-label{
+    font-size:10.5px;letter-spacing:0.6px;text-transform:uppercase;
+    color:var(--txt-faint);margin-bottom:7px;display:flex;align-items:center;gap:6px;
+  }
+  .balance-value{
+    font-size:21px;font-weight:800;letter-spacing:-0.4px;display:flex;align-items:baseline;gap:3px;
+  }
+  .balance-value .cur{font-size:13px;color:var(--txt-dim);font-weight:700;}
+  .balance-value .num{outline:none;min-width:20px;border-radius:6px;padding:1px 3px;}
+  .balance-box.token .balance-value .num{color:#A9C6FF;}
+
+  /* editable affordance */
+  [contenteditable]{cursor:text;transition:background .15s,box-shadow .15s;}
+  [contenteditable]:hover{background:rgba(255,255,255,0.05);}
+  [contenteditable]:focus{background:rgba(47,128,255,0.12);box-shadow:0 0 0 1px rgba(47,128,255,0.5);}
+
+  /* ---------- Operations table ---------- */
+  .ops-card{
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--stroke);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .ops-head{
+    display:grid;grid-template-columns:150px 1fr 160px 44px;
+    gap:12px;padding:14px 22px;
+    font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--txt-faint);
+    border-bottom:1px solid var(--stroke);background:rgba(255,255,255,0.02);
+  }
+  .ops-head .r{text-align:right;}
+  .op-row{
+    display:grid;grid-template-columns:150px 1fr 160px 44px;
+    gap:12px;align-items:center;padding:13px 22px;
+    border-bottom:1px solid var(--stroke);
+    transition:opacity .4s ease,background .2s;
+  }
+  .op-row:last-child{border-bottom:none;}
+  .op-row:hover{background:rgba(255,255,255,0.02);}
+  .op-row.settled{opacity:0.4;}
+
+  .dir-select{position:relative;}
+  .dir-btn{
+    width:100%;font-size:12.5px;font-weight:700;padding:8px 10px;border-radius:10px;
+    border:1px solid transparent;cursor:pointer;text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    transition:filter .15s;
+  }
+  .dir-btn:hover{filter:brightness(1.12);}
+  .dir-btn.a-to-b{background:rgba(47,128,255,0.15);color:#7FB2FF;border-color:rgba(47,128,255,0.3);}
+  .dir-btn.b-to-a{background:rgba(18,217,174,0.15);color:#4FE6C6;border-color:rgba(18,217,174,0.3);}
+
+  .op-desc{
+    font-size:14px;color:#C6D4EC;outline:none;border-radius:8px;padding:5px 8px;margin:-5px -8px;
+    line-height:1.4;
+  }
+  .op-amount-wrap{display:flex;align-items:center;justify-content:flex-end;gap:3px;font-weight:700;font-size:15px;}
+  .op-amount-wrap .cur{color:var(--txt-dim);font-size:12px;}
+  .op-amount{outline:none;text-align:right;min-width:40px;border-radius:6px;padding:2px 4px;}
+  .op-del{
+    width:30px;height:30px;border-radius:9px;border:1px solid var(--stroke);
+    background:transparent;color:var(--txt-faint);cursor:pointer;font-size:15px;
+    display:flex;align-items:center;justify-content:center;justify-self:center;
+    transition:all .15s;
+  }
+  .op-del:hover{background:rgba(248,113,113,0.14);color:var(--red);border-color:rgba(248,113,113,0.4);}
+  .op-check{display:none;}
+
+  .ops-footer{display:flex;gap:12px;padding:16px 22px;border-top:1px solid var(--stroke);flex-wrap:wrap;}
+  .add-op-btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.04);border:1px dashed var(--stroke-strong);
+    color:var(--txt-dim);padding:10px 18px;border-radius:11px;cursor:pointer;
+    font-size:13.5px;font-weight:600;transition:all .15s;
+  }
+  .add-op-btn:hover{background:rgba(47,128,255,0.1);border-color:rgba(47,128,255,0.4);color:#9CC0FF;}
+  .ops-summary{margin-left:auto;display:flex;gap:22px;align-items:center;font-size:13px;color:var(--txt-dim);}
+  .ops-summary b{color:var(--txt);font-weight:700;}
+
+  /* ---------- Clearing button ---------- */
+  .clear-wrap{text-align:center;margin:30px 0 8px;}
+  .clear-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:linear-gradient(135deg,#2F80FF,#6A5CFF);
+    color:#fff;border:none;padding:17px 46px;font-size:16px;font-weight:700;
+    border-radius:14px;cursor:pointer;
+    box-shadow:0 12px 30px rgba(47,128,255,0.4);
+    transition:transform .15s,box-shadow .15s,filter .15s;
+  }
+  .clear-btn:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(47,128,255,0.5);filter:brightness(1.05);}
+  .clear-btn:active{transform:translateY(0);}
+
+  /* ---------- Result ---------- */
+  .result{
+    max-width:680px;margin:26px auto 0;
+    background:
+      radial-gradient(600px 300px at 50% -20%, rgba(47,128,255,0.25), transparent 70%),
+      linear-gradient(180deg,#0D1A38,#0A1428);
+    border:1px solid var(--stroke-strong);
+    border-radius:22px;padding:38px 34px;text-align:center;
+    box-shadow:var(--shadow);
+    max-height:0;opacity:0;overflow:hidden;padding-top:0;padding-bottom:0;
+    transition:max-height .5s ease,opacity .4s ease,padding .5s ease;
+  }
+  .result.show{max-height:640px;opacity:1;padding-top:38px;padding-bottom:38px;}
+  .result-label{
+    font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue-soft);
+    margin-bottom:14px;font-weight:600;
+  }
+  .result-flow{font-size:17px;color:var(--txt-dim);margin-bottom:16px;}
+  .result-flow b{color:var(--txt);}
+  .result-amount{
+    font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:8px;
+    background:linear-gradient(120deg,#12D9AE,#4A93FF);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .result-amount.zero{background:linear-gradient(120deg,#22C55E,#12D9AE);-webkit-background-clip:text;background-clip:text;}
+  .result-sub{font-size:13.5px;color:var(--txt-faint);margin-bottom:26px;}
+
+  .savings{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px;
+  }
+  .savings-item{
+    background:rgba(255,255,255,0.04);border:1px solid var(--stroke);
+    border-radius:14px;padding:18px 12px;
+  }
+  .savings-num{font-size:24px;font-weight:800;letter-spacing:-0.5px;}
+  .savings-num.hl{color:var(--teal);}
+  .savings-label{font-size:11px;color:var(--txt-faint);margin-top:6px;line-height:1.3;}
+
+  .reset-btn{
+    margin-top:26px;background:rgba(255,255,255,0.05);
+    border:1px solid var(--stroke-strong);color:var(--txt-dim);
+    padding:10px 22px;border-radius:11px;cursor:pointer;font-size:13px;font-weight:600;
+    transition:all .15s;
+  }
+  .reset-btn:hover{background:rgba(255,255,255,0.1);color:var(--txt);}
+
+  footer{text-align:center;color:var(--txt-faint);font-size:12px;margin-top:34px;line-height:1.6;padding:0 20px;}
+
+  @media(max-width:820px){
+    .companies{grid-template-columns:1fr;}
+    .ops-head{display:none;}
+    .op-row{grid-template-columns:1fr 44px;grid-template-areas:"dir del" "desc del" "amount del";gap:8px;padding:16px 18px;}
+    .op-row .dir-select{grid-area:dir;}
+    .op-row .op-desc{grid-area:desc;}
+    .op-row .op-amount-wrap{grid-area:amount;justify-content:flex-start;}
+    .op-row .op-del{grid-area:del;align-self:start;}
+    .ops-summary{margin-left:0;width:100%;justify-content:space-between;}
+    .savings{grid-template-columns:1fr;}
+    .intro h1{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5v17M6 12c0-3 2-5 5.5-5S17 9 17 12s-2 5-5.5 5S6 15 6 12z" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="brand-name">binio</div>
+  </div>
+  <div class="header-right">
+    <div class="pill"><span class="dot"></span> Demo · Clearing diario</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="intro">
+    <div class="kicker">◆ Compensación entre empresas</div>
+    <h1>Dos empresas que ya trabajan juntas, <b>una sola transferencia</b></h1>
+    <p>Editá los nombres, saldos y operaciones libremente. BINIO compensa todos los movimientos del mes y calcula el neto real a transferir. Tocá cualquier valor para modificarlo.</p>
+  </div>
+
+  <!-- Companies -->
+  <div class="section-title">🏢 Empresas <span class="chip">editable</span></div>
+  <div class="companies">
+    <div class="company-card a">
+      <div class="glow"></div>
+      <div class="company-head">
+        <div class="company-avatar" contenteditable="true">🏗️</div>
+        <div class="company-meta">
+          <div class="company-name" id="nameA" contenteditable="true">Constructora Lozano</div>
+          <div class="company-role">Empresa A</div>
+        </div>
+      </div>
+      <div class="balances">
+        <div class="balance-box">
+          <div class="balance-label">💵 Saldo Fiat</div>
+          <div class="balance-value"><span class="cur">$</span><span class="num" contenteditable="true">2.400.000</span></div>
+        </div>
+        <div class="balance-box token">
+          <div class="balance-label">🔷 Tokens BINIO</div>
+          <div class="balance-value"><span class="cur">$</span><span class="num" contenteditable="true">2.400.000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="company-card b">
+      <div class="glow"></div>
+      <div class="company-head">
+        <div class="company-avatar" contenteditable="true">🧱</div>
+        <div class="company-meta">
+          <div class="company-name" id="nameB" contenteditable="true">Corralón San Martín</div>
+          <div class="company-role">Empresa B</div>
+        </div>
+      </div>
+      <div class="balances">
+        <div class="balance-box">
+          <div class="balance-label">💵 Saldo Fiat</div>
+          <div class="balance-value"><span class="cur">$</span><span class="num" contenteditable="true">1.800.000</span></div>
+        </div>
+        <div class="balance-box token">
+          <div class="balance-label">🔷 Tokens BINIO</div>
+          <div class="balance-value"><span class="cur">$</span><span class="num" contenteditable="true">1.800.000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Operations -->
+  <div class="section-title">📋 Operaciones del mes <span class="chip">editable</span><span class="spacer"></span></div>
+  <div class="ops-card">
+    <div class="ops-head">
+      <div>Dirección</div>
+      <div>Concepto</div>
+      <div class="r">Monto</div>
+      <div></div>
+    </div>
+    <div id="opsBody"><!-- rows injected --></div>
+    <div class="ops-footer">
+      <button class="add-op-btn" onclick="addRow()">＋ Agregar operación</button>
+      <div class="ops-summary">
+        <span id="sumAB">A → B: <b>$ 0</b></span>
+        <span id="sumBA">B → A: <b>$ 0</b></span>
+        <span id="sumCount"><b>0</b> ops</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="clear-wrap">
+    <button class="clear-btn" id="clearBtn" onclick="calcularClearing()">⚡ Calcular Clearing</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="result-label">Resultado del Clearing</div>
+    <div class="result-flow" id="resultFlow">—</div>
+    <div class="result-amount" id="netAmount">$ 0</div>
+    <div class="result-sub" id="resultSub">—</div>
+    <div class="savings">
+      <div class="savings-item">
+        <div class="savings-num" id="sv0">— → 1</div>
+        <div class="savings-label">Transferencias</div>
+      </div>
+      <div class="savings-item">
+        <div class="savings-num hl" id="sv1">0%</div>
+        <div class="savings-label">Menos movimiento de dinero</div>
+      </div>
+      <div class="savings-item">
+        <div class="savings-num" id="sv2">$ 0</div>
+        <div class="savings-label">Ahorro estimado en comisiones*</div>
+      </div>
+    </div>
+    <button class="reset-btn" onclick="resetDemo()">↺ Reiniciar demo</button>
+  </div>
+
+  <footer>* Estimado sobre impuesto al cheque (0,6%) evitado por transferencias no realizadas — BINIO no reemplaza obligaciones impositivas ni facturación.</footer>
+
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const parseNum = s => parseInt(String(s).replace(/[^\d]/g,''),10) || 0;
+
+/* initial operations */
+const seed = [
+  {dir:'a-to-b', amount:180000, desc:'Compra de cemento y materiales'},
+  {dir:'b-to-a', amount:220000, desc:'Contratación de mano de obra'},
+  {dir:'a-to-b', amount:90000,  desc:'Compra de herramientas'},
+  {dir:'b-to-a', amount:60000,  desc:'Servicio de logística'},
+  {dir:'a-to-b', amount:130000, desc:'Compra de materiales adicionales'},
+];
+
+const opsBody = document.getElementById('opsBody');
+
+function labelFor(dir){
+  const a = document.getElementById('nameA').textContent.trim() || 'Empresa A';
+  const b = document.getElementById('nameB').textContent.trim() || 'Empresa B';
+  return dir === 'a-to-b' ? 'A → B' : 'B → A';
+}
+
+function makeRow(op){
+  const row = document.createElement('div');
+  row.className = 'op-row';
+  row.dataset.dir = op.dir;
+  row.innerHTML = `
+    <div class="dir-select">
+      <button type="button" class="dir-btn ${op.dir}" onclick="toggleDir(this)">${op.dir==='a-to-b'?'A → B':'B → A'}</button>
+    </div>
+    <div class="op-desc" contenteditable="true">${op.desc}</div>
+    <div class="op-amount-wrap"><span class="cur">$</span><span class="op-amount" contenteditable="true">${op.amount.toLocaleString('es-AR')}</span></div>
+    <button class="op-del" onclick="delRow(this)" title="Eliminar">✕</button>
+  `;
+  return row;
+}
+
+function render(){
+  opsBody.innerHTML = '';
+  seed.forEach(op => opsBody.appendChild(makeRow(op)));
+  updateSummary();
+}
+
+function toggleDir(btn){
+  const row = btn.closest('.op-row');
+  const next = row.dataset.dir === 'a-to-b' ? 'b-to-a' : 'a-to-b';
+  row.dataset.dir = next;
+  btn.className = 'dir-btn ' + next;
+  btn.textContent = next === 'a-to-b' ? 'A → B' : 'B → A';
+  updateSummary();
+  liveIfShown();
+}
+
+function addRow(){
+  const row = makeRow({dir:'a-to-b', amount:0, desc:'Nueva operación'});
+  opsBody.appendChild(row);
+  updateSummary();
+  const el = row.querySelector('.op-desc');
+  el.focus();
+  document.getSelection().selectAllChildren(el);
+}
+
+function delRow(btn){
+  btn.closest('.op-row').remove();
+  updateSummary();
+  liveIfShown();
+}
+
+function readRows(){
+  return [...document.querySelectorAll('.op-row')].map(r => ({
+    dir: r.dataset.dir,
+    amount: parseNum(r.querySelector('.op-amount').textContent)
+  }));
+}
+
+function totals(){
+  let ab=0, ba=0;
+  readRows().forEach(o => o.dir==='a-to-b' ? ab+=o.amount : ba+=o.amount);
+  return {ab, ba, count: readRows().length, moved: ab+ba, net: ab-ba};
+}
+
+function updateSummary(){
+  const t = totals();
+  document.getElementById('sumAB').innerHTML = 'A → B: <b>'+fmt(t.ab)+'</b>';
+  document.getElementById('sumBA').innerHTML = 'B → A: <b>'+fmt(t.ba)+'</b>';
+  document.getElementById('sumCount').innerHTML = '<b>'+t.count+'</b> ops';
+}
+
+/* recompute live if result already visible */
+function liveIfShown(){
+  if(document.getElementById('result').classList.contains('show')) renderResult(false);
+}
+
+function renderResult(scroll){
+  const t = totals();
+  const nameA = document.getElementById('nameA').textContent.trim() || 'Empresa A';
+  const nameB = document.getElementById('nameB').textContent.trim() || 'Empresa B';
+
+  const flow = document.getElementById('resultFlow');
+  const amt = document.getElementById('netAmount');
+  const sub = document.getElementById('resultSub');
+
+  if(t.net > 0){
+    flow.innerHTML = `<b>${nameA}</b> transfiere a <b>${nameB}</b>`;
+    amt.textContent = fmt(t.net);
+    amt.classList.remove('zero');
+  } else if(t.net < 0){
+    flow.innerHTML = `<b>${nameB}</b> transfiere a <b>${nameA}</b>`;
+    amt.textContent = fmt(Math.abs(t.net));
+    amt.classList.remove('zero');
+  } else {
+    flow.innerHTML = `Cuentas compensadas — <b>nadie transfiere nada</b>`;
+    amt.textContent = fmt(0);
+    amt.classList.add('zero');
+  }
+
+  sub.textContent = t.moved > 0
+    ? `En vez de mover ${fmt(t.moved)} en ${t.count} transferencia${t.count!==1?'s':''} separada${t.count!==1?'s':''}`
+    : 'Agregá operaciones para ver la compensación';
+
+  const netAbs = Math.abs(t.net);
+  const reduction = t.moved > 0 ? Math.round((1 - netAbs/t.moved) * 100) : 0;
+  const commission = Math.round((t.moved - netAbs) * 0.006);
+
+  document.getElementById('sv0').textContent = t.count + ' → ' + (t.net===0 ? '0' : '1');
+  document.getElementById('sv1').textContent = reduction + '%';
+  document.getElementById('sv2').textContent = fmt(commission);
+
+  if(scroll){
+    document.getElementById('result').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+function calcularClearing(){
+  const rows = document.querySelectorAll('.op-row');
+  rows.forEach((row,i) => setTimeout(()=>row.classList.add('settled'), i*140));
+
+  setTimeout(()=>{
+    document.getElementById('result').classList.add('show');
+    renderResult(true);
+    document.getElementById('clearBtn').textContent = '↻ Recalcular';
+  }, rows.length*140 + 260);
+}
+
+function resetDemo(){
+  document.querySelectorAll('.op-row').forEach(r => r.classList.remove('settled'));
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('clearBtn').textContent = '⚡ Calcular Clearing';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* live recompute while editing amounts / directions / names */
+document.addEventListener('input', e => {
+  if(e.target.classList.contains('op-amount')){ updateSummary(); liveIfShown(); }
+  if(e.target.classList.contains('company-name')){ liveIfShown(); }
+});
+/* keep amounts numeric-ish on blur (reformat) */
+document.addEventListener('blur', e => {
+  if(e.target.classList.contains('op-amount')){
+    e.target.textContent = parseNum(e.target.textContent).toLocaleString('es-AR');
+    updateSummary(); liveIfShown();
+  }
+  if(e.target.classList.contains('num')){
+    e.target.textContent = parseNum(e.target.textContent).toLocaleString('es-AR');
+  }
+}, true);
+/* Enter should not create newlines in single-line fields */
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter' && (e.target.classList.contains('op-amount')||e.target.classList.contains('num')||e.target.classList.contains('company-name'))){
+    e.preventDefault(); e.target.blur();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
