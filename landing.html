@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BINIO — Red de pagos entre empresas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  :root{
+    --bg:#070B14;
+    --bg-2:#0A0E1A;
+    --card:#111827;
+    --card-2:#0E1524;
+    --stroke:rgba(255,255,255,0.07);
+    --stroke-2:rgba(255,255,255,0.12);
+    --txt:#F3F6FC;
+    --dim:#9AA7C2;
+    --faint:#5C6A88;
+    --blue:#3B82F6;
+    --blue-l:#60A5FA;
+    --purple:#8B5CF6;
+    --teal:#14C9A8;
+    --green:#22C55E;
+    --font:'IBM Plex Sans',-apple-system,'Segoe UI',Arial,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--font);color:var(--txt);letter-spacing:-0.1px;
+    background:
+      radial-gradient(1100px 600px at 84% -6%, rgba(59,130,246,0.20), transparent 58%),
+      radial-gradient(900px 520px at 8% 4%, rgba(139,92,246,0.14), transparent 60%),
+      var(--bg);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{text-decoration:none;color:inherit;}
+  .container{max-width:1160px;margin:0 auto;padding:0 26px;}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+    padding:18px 26px;max-width:1160px;margin:0 auto;
+  }
+  .nav-bg{position:sticky;top:0;z-index:49;}
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand-logo{
+    width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#3B82F6,#60A5FA);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(59,130,246,0.4);
+  }
+  .brand-logo svg{width:22px;height:22px;}
+  .brand-name{font-weight:700;font-size:23px;letter-spacing:-0.5px;}
+  .nav-links{display:flex;gap:30px;align-items:center;}
+  .nav-links a{font-size:14px;color:var(--dim);transition:color .15s;}
+  .nav-links a:hover{color:var(--txt);}
+  .nav-right{display:flex;align-items:center;gap:16px;}
+  .btn-ghost{font-size:14px;color:var(--txt);padding:9px 4px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;font-family:var(--font);cursor:pointer;
+    font-weight:600;border:none;transition:transform .15s,filter .15s,box-shadow .15s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#2563EB,#3B82F6);color:#fff;
+    padding:12px 22px;border-radius:12px;font-size:14px;box-shadow:0 8px 20px rgba(37,99,235,0.4);
+  }
+  .btn-primary:hover{transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 12px 26px rgba(37,99,235,0.5);}
+
+  /* ---------- Hero ---------- */
+  .hero{display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;padding:70px 0 90px;}
+  .kicker{
+    display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:600;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--blue-l);background:rgba(59,130,246,0.10);
+    border:1px solid rgba(59,130,246,0.24);padding:7px 15px;border-radius:100px;margin-bottom:24px;
+  }
+  .kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal);}
+  .hero h1{font-size:48px;line-height:1.08;letter-spacing:-1.4px;font-weight:700;margin-bottom:22px;}
+  .hero h1 .grad{background:linear-gradient(115deg,#60A5FA,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p.lead{font-size:18px;line-height:1.55;color:var(--dim);max-width:520px;margin-bottom:34px;}
+  .hero-cta{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .btn-lg{padding:16px 30px;font-size:16px;border-radius:14px;}
+  .hero-note{font-size:13px;color:var(--faint);display:flex;align-items:center;gap:8px;}
+  .hero-note i{color:var(--teal);}
+
+  /* Hero visual — mock payment flow card */
+  .hero-visual{position:relative;}
+  .glass{
+    position:relative;background:linear-gradient(180deg,rgba(20,28,48,0.9),rgba(12,18,34,0.92));
+    border:1px solid var(--stroke-2);border-radius:22px;padding:22px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);backdrop-filter:blur(8px);
+  }
+  .glass::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;border-radius:22px 22px 0 0;background:linear-gradient(90deg,#3B82F6,#8B5CF6,#14C9A8);}
+  .g-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+  .g-title{font-size:14px;font-weight:600;color:var(--dim);}
+  .g-live{font-size:11px;color:var(--teal);display:flex;align-items:center;gap:6px;}
+  .g-live .dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);}
+  .pay-row{
+    display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--stroke);
+    border-radius:14px;background:rgba(255,255,255,0.02);margin-bottom:12px;
+  }
+  .pay-av{width:38px;height:38px;border-radius:10px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+  .g-blue{background:linear-gradient(135deg,#2563EB,#60A5FA);}
+  .g-teal{background:linear-gradient(135deg,#0F9E85,#2BE0BE);}
+  .g-purple{background:linear-gradient(135deg,#7C3AED,#A98BFF);}
+  .pay-info{flex:1;min-width:0;}
+  .pay-info .n{font-size:13.5px;font-weight:600;}
+  .pay-info .s{font-size:11.5px;color:var(--faint);}
+  .pay-amt{font-weight:700;font-size:15px;text-align:right;}
+  .pay-amt .chip{display:block;font-size:10px;color:var(--teal);font-weight:600;margin-top:2px;}
+  .g-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--stroke);}
+  .g-foot .lbl{font-size:12px;color:var(--faint);}
+  .g-foot .big{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+  .coin{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 16px 40px rgba(0,0,0,0.5);}
+  .coin.c1{width:72px;height:72px;background:linear-gradient(135deg,#2563EB,#60A5FA);top:-30px;right:-22px;}
+  .coin.c2{width:58px;height:58px;background:linear-gradient(135deg,#0F9E85,#2BE0BE);bottom:-24px;left:-24px;}
+
+  /* ---------- Problem ---------- */
+  .problem{
+    background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--stroke);
+    border-radius:22px;padding:44px;display:flex;align-items:center;gap:40px;margin:10px 0 70px;flex-wrap:wrap;
+  }
+  .problem .num{font-size:72px;font-weight:700;letter-spacing:-2px;line-height:1;background:linear-gradient(120deg,#F26D6D,#F5B841);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;}
+  .problem .txt{flex:1;min-width:280px;}
+  .problem .txt h3{font-size:22px;font-weight:600;margin-bottom:10px;letter-spacing:-0.4px;}
+  .problem .txt p{color:var(--dim);font-size:16px;line-height:1.55;}
+
+  /* ---------- Section shell ---------- */
+  .section{padding:20px 0 80px;}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto 46px;}
+  .sec-head .kicker{margin-bottom:18px;}
+  .sec-head h2{font-size:34px;font-weight:700;letter-spacing:-0.9px;margin-bottom:12px;}
+  .sec-head p{color:var(--dim);font-size:16px;line-height:1.55;}
+
+  /* ---------- Steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .step{
+    background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--stroke);
+    border-radius:18px;padding:30px 26px;position:relative;transition:transform .18s,border-color .18s;
+  }
+  .step:hover{transform:translateY(-4px);border-color:var(--stroke-2);}
+  .step .n{position:absolute;top:24px;right:26px;font-size:13px;font-weight:700;color:var(--faint);}
+  .step .s-ic{
+    width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:20px;margin-bottom:20px;
+  }
+  .s-ic.blue{background:rgba(59,130,246,0.15);color:#60A5FA;}
+  .s-ic.purple{background:rgba(139,92,246,0.15);color:#A98BFF;}
+  .s-ic.teal{background:rgba(20,201,168,0.15);color:#2BE0BE;}
+  .step h4{font-size:18px;font-weight:600;margin-bottom:10px;letter-spacing:-0.3px;}
+  .step p{color:var(--dim);font-size:14.5px;line-height:1.55;}
+  .step p b{color:var(--txt);font-weight:600;}
+
+  /* ---------- Trust ---------- */
+  .trust{
+    position:relative;overflow:hidden;border-radius:24px;padding:56px 48px;text-align:center;
+    background:
+      radial-gradient(600px 300px at 50% -10%, rgba(20,201,168,0.18), transparent 70%),
+      linear-gradient(180deg,#0E1A2E,#0A1220);
+    border:1px solid var(--stroke-2);
+  }
+  .trust .shield{
+    width:66px;height:66px;border-radius:18px;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;
+    font-size:26px;color:#2BE0BE;background:rgba(20,201,168,0.14);border:1px solid rgba(20,201,168,0.3);
+  }
+  .trust h2{font-size:32px;font-weight:700;letter-spacing:-0.8px;margin-bottom:16px;}
+  .trust p{max-width:640px;margin:0 auto;color:var(--dim);font-size:17px;line-height:1.6;}
+  .trust p b{color:var(--txt);font-weight:600;}
+  .trust-badges{display:flex;justify-content:center;gap:14px;margin-top:30px;flex-wrap:wrap;}
+  .tb{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--dim);background:rgba(255,255,255,0.04);border:1px solid var(--stroke);padding:10px 18px;border-radius:100px;}
+  .tb i{color:var(--teal);}
+
+  /* ---------- Final CTA ---------- */
+  .final{text-align:center;padding:90px 0 40px;}
+  .final h2{font-size:36px;font-weight:700;letter-spacing:-1px;margin-bottom:16px;max-width:720px;margin-left:auto;margin-right:auto;line-height:1.15;}
+  .final p{color:var(--dim);font-size:17px;margin-bottom:30px;}
+  .final .grad{background:linear-gradient(115deg,#60A5FA,#8B5CF6);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  footer{border-top:1px solid var(--stroke);padding:34px 0;text-align:center;color:var(--faint);font-size:13px;line-height:1.7;}
+  footer .fbrand{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:12px;color:var(--txt);font-weight:600;}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;gap:60px;padding:44px 0 60px;}
+    .hero h1{font-size:38px;}
+    .nav-links{display:none;}
+    .steps{grid-template-columns:1fr;}
+    .problem{padding:32px;gap:22px;}
+    .problem .num{font-size:56px;}
+  }
+  @media(max-width:520px){
+    .hero h1{font-size:31px;}
+    .sec-head h2,.trust h2,.final h2{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="nav-bg">
+<nav>
+  <div class="brand">
+    <div class="brand-logo">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 3.5v17M6 12c0-3 2-5 5.5-5S17 9 17 12s-2 5-5.5 5S6 15 6 12z" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="brand-name">binio</div>
+  </div>
+  <div class="nav-links">
+    <a href="#como">Cómo funciona</a>
+    <a href="#confianza">Confianza</a>
+    <a href="index.html">Demo de Clearing</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn-ghost" href="#">Iniciar sesión</a>
+    <a class="btn btn-primary" href="#sumate">Sumá tu empresa</a>
+  </div>
+</nav>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div>
+      <div class="kicker"><span class="dot"></span> Red de pagos B2B</div>
+      <h1>Cobrá y pagá entre empresas <span class="grad">sin perder plata en comisiones.</span></h1>
+      <p class="lead">BINIO es la red de pagos B2B donde tu dinero se mueve en segundos, respaldado 1 a 1 en pesos, sin fricción bancaria.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="#sumate">Sumá tu empresa a la red <i class="fa-solid fa-arrow-right"></i></a>
+        <div class="hero-note"><i class="fa-solid fa-bolt"></i> Liquidación en segundos</div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="glass">
+        <div class="coin c1"><i class="fa-solid fa-dollar-sign"></i></div>
+        <div class="coin c2"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+        <div class="g-head">
+          <div class="g-title">Movimientos de hoy</div>
+          <div class="g-live"><span class="dot"></span> En vivo</div>
+        </div>
+        <div class="pay-row">
+          <div class="pay-av g-blue">CL</div>
+          <div class="pay-info"><div class="n">Pago a Corralón San Martín</div><div class="s">Proveedor · Materiales</div></div>
+          <div class="pay-amt">$ 180.000<span class="chip"><i class="fa-solid fa-check"></i> liquidado</span></div>
+        </div>
+        <div class="pay-row">
+          <div class="pay-av g-teal">GE</div>
+          <div class="pay-info"><div class="n">Cobro de Green Energy</div><div class="s">Cliente · Servicios</div></div>
+          <div class="pay-amt">$ 220.000<span class="chip"><i class="fa-solid fa-check"></i> liquidado</span></div>
+        </div>
+        <div class="pay-row">
+          <div class="pay-av g-purple">IN</div>
+          <div class="pay-info"><div class="n">Pago a Innova S.A.</div><div class="s">Proveedor · Logística</div></div>
+          <div class="pay-amt">$ 90.000<span class="chip"><i class="fa-solid fa-check"></i> liquidado</span></div>
+        </div>
+        <div class="g-foot">
+          <div class="lbl">Comisión pagada hoy</div>
+          <div class="big" style="color:#2BE0BE;">$ 0</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="problem">
+    <div class="num">1% – 5%</div>
+    <div class="txt">
+      <h3>Cada transferencia entre empresas pierde plata.</h3>
+      <p>Cada transferencia entre empresas pierde entre 1% y 5% en comisiones. En un mes de operaciones, eso son cientos de miles de pesos que desaparecen.</p>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="section" id="como">
+    <div class="sec-head">
+      <div class="kicker"><span class="dot"></span> Cómo funciona</div>
+      <h2>Tres pasos, sin vueltas</h2>
+      <p>Sin jerga técnica ni fricción bancaria. Así opera tu empresa dentro de la red.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <div class="s-ic blue"><i class="fa-solid fa-building-columns"></i></div>
+        <h4>Depositás pesos</h4>
+        <p>Depositás pesos en una <b>cuenta regulada</b>. Tu dinero queda respaldado 1 a 1.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <div class="s-ic purple"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+        <h4>Operás dentro de la red</h4>
+        <p>Pagos a proveedores y cobros de clientes se <b>liquidan en segundos, sin costo</b>.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <div class="s-ic teal"><i class="fa-solid fa-money-bill-wave"></i></div>
+        <h4>Retirás cuando quieras</h4>
+        <p>Solo ahí se aplica una <b>comisión mínima</b>. El resto de tus operaciones, sin fricción.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Confianza -->
+  <section class="section" id="confianza">
+    <div class="trust">
+      <div class="shield"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2>Tu dinero nunca sale de una entidad regulada</h2>
+      <p>Cada peso dentro de BINIO está <b>respaldado por un peso real</b>, <b>verificable públicamente</b> en todo momento.</p>
+      <div class="trust-badges">
+        <div class="tb"><i class="fa-solid fa-scale-balanced"></i> Entidad regulada</div>
+        <div class="tb"><i class="fa-solid fa-coins"></i> Respaldo 1:1 en pesos</div>
+        <div class="tb"><i class="fa-solid fa-magnifying-glass-chart"></i> Verificable públicamente</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final" id="sumate">
+    <h2>Cuanto más densa la red, <span class="grad">menos plata pierde tu negocio.</span></h2>
+    <p>Sumate con tus proveedores y clientes.</p>
+    <a class="btn btn-primary btn-lg" href="#">Quiero unirme <i class="fa-solid fa-arrow-right"></i></a>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div class="fbrand">
+      <div class="brand-logo" style="width:30px;height:30px;border-radius:9px;"><svg viewBox="0 0 24 24" fill="none" style="width:16px;height:16px;"><path d="M6 3.5v17M6 12c0-3 2-5 5.5-5S17 9 17 12s-2 5-5.5 5S6 15 6 12z" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      binio
+    </div>
+    Red de pagos entre empresas · Respaldo 1:1 en pesos, verificable públicamente.<br>
+    BINIO es un medio de pago. No es un instrumento de inversión ni ofrece rendimientos.
+  </div>
+</footer>
+
+</body>
+</html>
