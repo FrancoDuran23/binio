@@ -42,7 +42,9 @@
     width:232px;flex-shrink:0;background:#0B101E;border-right:1px solid var(--stroke);
     position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
     padding:20px 14px 16px;z-index:60;
+    transition:margin-left .25s ease;
   }
+  .layout.side-closed .sidebar{margin-left:-233px;}
   .side-brand{display:flex;align-items:center;gap:11px;padding:0 8px 22px;}
   .nav{display:flex;flex-direction:column;gap:3px;flex:1;overflow-y:auto;}
   .nav a{
@@ -61,7 +63,7 @@
   }
   .main{flex:1;min-width:0;}
   .burger{
-    display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--stroke);
+    display:inline-flex;width:38px;height:38px;border-radius:10px;border:1px solid var(--stroke);
     background:transparent;color:var(--txt);font-size:15px;cursor:pointer;
     align-items:center;justify-content:center;flex-shrink:0;
   }
@@ -302,16 +304,8 @@
     <div class="brand-name">binio</div>
   </div>
   <nav class="nav">
-    <a href="landing.html"><i class="fa-solid fa-house"></i> Dashboard</a>
-    <a href="#"><i class="fa-solid fa-building"></i> Empresas</a>
-    <a href="#"><i class="fa-solid fa-circle-plus"></i> Cargar Fiat</a>
-    <a href="#"><i class="fa-solid fa-cube"></i> Tokens Binio</a>
-    <a href="#" class="active"><i class="fa-solid fa-arrow-right-arrow-left"></i> Operaciones</a>
-    <a href="#"><i class="fa-solid fa-list"></i> Transacciones</a>
-    <a href="#"><i class="fa-solid fa-chart-column"></i> Reportes</a>
-    <a href="#"><i class="fa-solid fa-gift"></i> Beneficios</a>
-    <a href="#"><i class="fa-solid fa-users"></i> Usuarios</a>
-    <a href="#"><i class="fa-solid fa-gear"></i> Configuración</a>
+    <a href="landing.html"><i class="fa-solid fa-house"></i> Inicio</a>
+    <a href="index.html" class="active"><i class="fa-solid fa-arrow-right-arrow-left"></i> Clearing</a>
   </nav>
   <div class="side-user">
     <div class="user-av">BA</div>
@@ -466,9 +460,15 @@
 <script>
 function toggleMenu(force){
   const sb=document.getElementById('sidebar'), ov=document.getElementById('overlay');
-  const open = typeof force==='boolean' ? force : !sb.classList.contains('open');
-  sb.classList.toggle('open', open);
-  ov.classList.toggle('show', open);
+  const ly=document.querySelector('.layout');
+  if(window.matchMedia('(max-width:1020px)').matches){
+    const open = typeof force==='boolean' ? force : !sb.classList.contains('open');
+    sb.classList.toggle('open', open);
+    ov.classList.toggle('show', open);
+  }else{
+    const open = typeof force==='boolean' ? force : ly.classList.contains('side-closed');
+    ly.classList.toggle('side-closed', !open);
+  }
 }
 </script>
 <script>
