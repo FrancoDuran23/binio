@@ -112,7 +112,7 @@
   .btn-primary:hover{filter:brightness(1.07);transform:translateY(-1px);}
 
   /* ---------- Stat cards ---------- */
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:26px 0;}
   .stat{
     background:linear-gradient(180deg,var(--card),var(--card-2));
     border:1px solid var(--stroke);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden;
@@ -168,6 +168,10 @@
   .bbox .v .num{outline:none;min-width:20px;border-radius:6px;padding:1px 3px;}
   .bbox.tok .v .num{color:#93B4FF;}
 
+  .empty{display:none;padding:36px 22px;text-align:center;color:var(--faint);font-size:13.5px;line-height:1.5;}
+  .empty i{display:block;font-size:26px;margin-bottom:10px;opacity:0.6;}
+  .empty.show{display:block;}
+  [data-ph]:empty::before{content:attr(data-ph);color:var(--faint);font-weight:400;}
   [contenteditable]{cursor:text;transition:background .12s,box-shadow .12s;}
   [contenteditable]:hover{background:rgba(255,255,255,0.05);}
   [contenteditable]:focus{background:rgba(59,130,246,0.14);box-shadow:0 0 0 1px rgba(59,130,246,0.55);}
@@ -281,7 +285,7 @@
     .wrap{padding:20px 16px;}
     .topbar .user-name{display:none;}
     .page-head h1{font-size:22px;}
-    .stats{display:none;}
+    .stats{grid-template-columns:1fr;}
     .thead{display:none;}
     .trow{grid-template-columns:1fr auto;grid-template-areas:"flow flow" "desc desc" "amt del";gap:10px;padding:14px 16px;}
     .trow .flow{grid-area:flow;}.trow .op-desc{grid-area:desc;}
@@ -348,7 +352,77 @@
     </div>
   </div>
 
-  <!-- Stat cards -->
+  <!-- Companies -->
+  <div class="card">
+    <div class="card-head"><div class="h-ic"><i class="fa-solid fa-building"></i></div><h2>Empresas</h2><div class="badge-edit"><i class="fa-solid fa-pen"></i> editable</div></div>
+    <div class="parties">
+      <div class="party">
+        <div class="party-top">
+          <div class="avatar g-blue" id="avA">A</div>
+          <div>
+            <div class="p-name" id="nameA" contenteditable="true" data-ph="Nombre de la empresa A"></div>
+            <div class="p-id">Empresa A · EMP-001</div>
+          </div>
+        </div>
+        <div class="p-balances">
+          <div class="bbox"><div class="l">Saldo Fiat (USD)</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true" inputmode="numeric">0</span></div></div>
+          <div class="bbox tok"><div class="l">Tokens Binio</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true" inputmode="numeric">0</span></div></div>
+        </div>
+      </div>
+      <div class="party">
+        <div class="party-top">
+          <div class="avatar g-teal" id="avB">B</div>
+          <div>
+            <div class="p-name" id="nameB" contenteditable="true" data-ph="Nombre de la empresa B"></div>
+            <div class="p-id">Empresa B · EMP-002</div>
+          </div>
+        </div>
+        <div class="p-balances">
+          <div class="bbox"><div class="l">Saldo Fiat (USD)</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true" inputmode="numeric">0</span></div></div>
+          <div class="bbox tok"><div class="l">Tokens Binio</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true" inputmode="numeric">0</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Operations -->
+  <div class="card">
+    <div class="card-head"><div class="h-ic"><i class="fa-solid fa-list-check"></i></div><h2>Operaciones del mes</h2><div class="badge-edit"><i class="fa-solid fa-pen"></i> editable</div></div>
+    <div class="thead">
+      <div>Origen → Destino</div>
+      <div>Concepto</div>
+      <div class="r">Monto Fiat</div>
+      <div></div>
+    </div>
+    <div id="opsBody"></div>
+    <div class="empty" id="emptyState"><i class="fa-regular fa-folder-open"></i>Sin operaciones todavía — agregá la primera para empezar la demo</div>
+    <div class="tfoot">
+      <button class="add-btn" onclick="addRow()"><i class="fa-solid fa-plus"></i> Agregar operación</button>
+      <div class="foot-sum">
+        <span id="fAB">A → B: <b>$ 0</b></span>
+        <span id="fBA">B → A: <b>$ 0</b></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="run-wrap">
+    <button class="run-btn" id="runBtn" onclick="calcularClearing()"><i class="fa-solid fa-bolt"></i> Calcular Clearing</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="r-label">Resultado del Clearing</div>
+    <div class="r-flow" id="rFlow">—</div>
+    <div class="r-amt" id="rAmt">$ 0</div>
+    <div class="r-sub" id="rSub">—</div>
+    <div class="r-cards">
+      <div class="r-card"><div class="n" id="rc0">— → 1</div><div class="t">Transferencias</div></div>
+      <div class="r-card"><div class="n hl" id="rc1">0%</div><div class="t">Menos movimiento de dinero</div></div>
+      <div class="r-card"><div class="n" id="rc2">$ 0</div><div class="t">Ahorro estimado en comisiones*</div></div>
+    </div>
+    <button class="reset" onclick="resetDemo()"><i class="fa-solid fa-rotate-left"></i> Reiniciar demo</button>
+  </div>
+
+  <!-- Stat cards (resumen) -->
   <div class="stats">
     <div class="stat">
       <div class="top">
@@ -386,75 +460,6 @@
     </div>
   </div>
 
-  <!-- Companies -->
-  <div class="card">
-    <div class="card-head"><div class="h-ic"><i class="fa-solid fa-building"></i></div><h2>Empresas</h2><div class="badge-edit"><i class="fa-solid fa-pen"></i> editable</div></div>
-    <div class="parties">
-      <div class="party">
-        <div class="party-top">
-          <div class="avatar g-blue" id="avA">CL</div>
-          <div>
-            <div class="p-name" id="nameA" contenteditable="true">Constructora Lozano</div>
-            <div class="p-id">Empresa A · EMP-001</div>
-          </div>
-        </div>
-        <div class="p-balances">
-          <div class="bbox"><div class="l">Saldo Fiat (USD)</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true">2.400.000</span></div></div>
-          <div class="bbox tok"><div class="l">Tokens Binio</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true">2.400.000</span></div></div>
-        </div>
-      </div>
-      <div class="party">
-        <div class="party-top">
-          <div class="avatar g-teal" id="avB">CS</div>
-          <div>
-            <div class="p-name" id="nameB" contenteditable="true">Corralón San Martín</div>
-            <div class="p-id">Empresa B · EMP-002</div>
-          </div>
-        </div>
-        <div class="p-balances">
-          <div class="bbox"><div class="l">Saldo Fiat (USD)</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true">1.800.000</span></div></div>
-          <div class="bbox tok"><div class="l">Tokens Binio</div><div class="v"><span class="cur">$</span><span class="num" contenteditable="true">1.800.000</span></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Operations -->
-  <div class="card">
-    <div class="card-head"><div class="h-ic"><i class="fa-solid fa-list-check"></i></div><h2>Operaciones del mes</h2><div class="badge-edit"><i class="fa-solid fa-pen"></i> editable</div></div>
-    <div class="thead">
-      <div>Origen → Destino</div>
-      <div>Concepto</div>
-      <div class="r">Monto Fiat</div>
-      <div></div>
-    </div>
-    <div id="opsBody"></div>
-    <div class="tfoot">
-      <button class="add-btn" onclick="addRow()"><i class="fa-solid fa-plus"></i> Agregar operación</button>
-      <div class="foot-sum">
-        <span id="fAB">A → B: <b>$ 0</b></span>
-        <span id="fBA">B → A: <b>$ 0</b></span>
-      </div>
-    </div>
-  </div>
-
-  <div class="run-wrap">
-    <button class="run-btn" id="runBtn" onclick="calcularClearing()"><i class="fa-solid fa-bolt"></i> Calcular Clearing</button>
-  </div>
-
-  <div class="result" id="result">
-    <div class="r-label">Resultado del Clearing</div>
-    <div class="r-flow" id="rFlow">—</div>
-    <div class="r-amt" id="rAmt">$ 0</div>
-    <div class="r-sub" id="rSub">—</div>
-    <div class="r-cards">
-      <div class="r-card"><div class="n" id="rc0">— → 1</div><div class="t">Transferencias</div></div>
-      <div class="r-card"><div class="n hl" id="rc1">0%</div><div class="t">Menos movimiento de dinero</div></div>
-      <div class="r-card"><div class="n" id="rc2">$ 0</div><div class="t">Ahorro estimado en comisiones*</div></div>
-    </div>
-    <button class="reset" onclick="resetDemo()"><i class="fa-solid fa-rotate-left"></i> Reiniciar demo</button>
-  </div>
-
   <footer>* Estimado sobre impuesto al cheque (0,6%) evitado por transferencias no realizadas — BINIO no reemplaza obligaciones impositivas ni facturación.</footer>
 
 </div><!-- /wrap -->
@@ -479,19 +484,13 @@ function toggleMenu(force){
 const fmt = n => '$ ' + Math.round(n).toLocaleString('es-AR');
 const parseNum = s => parseInt(String(s).replace(/[^\d]/g,''),10) || 0;
 
-const seed = [
-  {dir:'a-to-b', amount:180000, desc:'Compra de cemento y materiales'},
-  {dir:'b-to-a', amount:220000, desc:'Contratación de mano de obra'},
-  {dir:'a-to-b', amount:90000,  desc:'Compra de herramientas'},
-  {dir:'b-to-a', amount:60000,  desc:'Servicio de logística'},
-  {dir:'a-to-b', amount:130000, desc:'Compra de materiales adicionales'},
-];
+const seed = []; // la demo arranca vacía: todo se carga en vivo
 
 const opsBody = document.getElementById('opsBody');
 
-function initials(name){
+function initials(name, fallback){
   const w = name.trim().split(/\s+/).filter(Boolean);
-  if(!w.length) return '?';
+  if(!w.length) return fallback;
   return (w[0][0] + (w[1]?w[1][0]:(w[0][1]||''))).toUpperCase();
 }
 function nameA(){ return document.getElementById('nameA').textContent.trim() || 'Empresa A'; }
@@ -507,8 +506,8 @@ function makeRow(op){
       <div class="arrow"><i class="fa-solid fa-arrow-right-long"></i><span class="swap"><i class="fa-solid fa-right-left"></i> invertir</span></div>
       <div class="flow-party d"><div class="mini-av"></div><span class="flow-nm"></span></div>
     </div>
-    <div class="op-desc" contenteditable="true">${op.desc}</div>
-    <div class="amt-wrap"><span class="cur">$</span><span class="amt" contenteditable="true">${op.amount.toLocaleString('es-AR')}</span></div>
+    <div class="op-desc" contenteditable="true" data-ph="Descripción de la operación">${op.desc}</div>
+    <div class="amt-wrap"><span class="cur">$</span><span class="amt" contenteditable="true" inputmode="numeric">${op.amount.toLocaleString('es-AR')}</span></div>
     <button class="del" onclick="delRow(this)" title="Eliminar operación"><i class="fa-regular fa-trash-can"></i></button>
   `;
   return row;
@@ -535,8 +534,8 @@ function render(){
   refreshAvatars(); updateStats();
 }
 function refreshAvatars(){
-  document.getElementById('avA').textContent=initials(nameA());
-  document.getElementById('avB').textContent=initials(nameB());
+  document.getElementById('avA').textContent=initials(document.getElementById('nameA').textContent,'A');
+  document.getElementById('avB').textContent=initials(document.getElementById('nameB').textContent,'B');
   document.querySelectorAll('.trow').forEach(paintFlow);
 }
 function swapDir(el){
@@ -545,9 +544,9 @@ function swapDir(el){
   paintFlow(row); updateStats(); liveIfShown();
 }
 function addRow(){
-  const r=makeRow({dir:'a-to-b',amount:0,desc:'Nueva operación'});
+  const r=makeRow({dir:'a-to-b',amount:0,desc:''});
   opsBody.appendChild(r); paintFlow(r); updateStats();
-  const el=r.querySelector('.op-desc'); el.focus(); document.getSelection().selectAllChildren(el);
+  r.querySelector('.op-desc').focus();
 }
 function delRow(btn){ btn.closest('.trow').remove(); updateStats(); liveIfShown(); }
 
@@ -571,6 +570,7 @@ function updateStats(){
   document.getElementById('stRed').textContent=red+'%';
   document.getElementById('fAB').innerHTML='A → B: <b>'+fmt(t.ab)+'</b>';
   document.getElementById('fBA').innerHTML='B → A: <b>'+fmt(t.ba)+'</b>';
+  document.getElementById('emptyState').classList.toggle('show', t.count===0);
 }
 function liveIfShown(){ if(document.getElementById('result').classList.contains('show')) renderResult(false); }
 
@@ -610,6 +610,16 @@ document.addEventListener('blur', e=>{
 }, true);
 document.addEventListener('keydown', e=>{
   if(e.key==='Enter' && (e.target.classList.contains('amt')||e.target.classList.contains('num')||e.target.classList.contains('p-name'))){ e.preventDefault(); e.target.blur(); }
+});
+/* numeric fields: block any non-digit character while typing */
+document.addEventListener('beforeinput', e=>{
+  if((e.target.classList.contains('amt')||e.target.classList.contains('num')) && e.data && /\D/.test(e.data)) e.preventDefault();
+});
+/* focusing a numeric field selects its content so typing replaces it */
+document.addEventListener('focusin', e=>{
+  if(e.target.classList.contains('amt')||e.target.classList.contains('num')){
+    document.getSelection().selectAllChildren(e.target);
+  }
 });
 
 render();
